@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChallengeScreen(
-    onCompleted: () -> Unit,
+    onCompleted: (Int) -> Unit,
     onBack: () -> Unit
 ) {
     // 仮のお題リスト
@@ -92,7 +92,7 @@ fun ChallengeScreen(
 
             InputScoringPopup( // Call the self-contained component
                 onScoreSelected = { score ->
-                    onCompleted() // Call onCompleted when a score is selected
+                    onCompleted(score) // Call onCompleted when a score is selected
                 }
             )
         }
