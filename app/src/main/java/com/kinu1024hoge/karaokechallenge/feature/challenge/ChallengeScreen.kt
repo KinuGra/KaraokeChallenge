@@ -31,41 +31,38 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kinu1024hoge.karaokechallenge.data.ApiClient
+import com.kinu1024hoge.karaokechallenge.data.ScorePostBody
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChallengeScreen(
-    onCompleted: (promptId: Int, score: Int) -> Unit,
+    onCompleted: (promptId: Int, score: Int, avg: Float?, count: Int) -> Unit, // ★ 4引数
     onBack: () -> Unit
 ) {
     // 状態
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
+    var submitting by remember { mutableStateOf(false) }
     var promptId by remember { mutableStateOf<Int?>(null) }
     var currentChallenge by remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
 
-    // 再取得ロジックを関数化
-    fun reload() {
-        scope.launch {
-            runCatching {
-                loading = true
-                error = null
-                ApiClient.api.getRandomPrompt()
-            }.onSuccess { dto ->
-                promptId = dto.id
-                currentChallenge = dto.content
-            }.onFailure { e ->
-                error = e.message ?: "ネットワークエラー"
-            }
-            loading = false
+    // 初回ロード（ランダムお題）
+    LaunchedEffect(Unit) {
+        runCatching {
+            loading = true
+            error = null
+            ApiClient.api.getRandomPrompt() // ← あなたの ApiService に合わせて
+        }.onSuccess { dto ->
+            promptId = dto.id
+            currentChallenge = dto.content
+        }.onFailure { e ->
+            error = e.message ?: "ネットワークエラー"
         }
+        loading = false
     }
-
-    // 初回ロード
-    LaunchedEffect(Unit) { reload() }
 
     Scaffold(
         topBar = {
@@ -78,12 +75,7 @@ fun ChallengeScreen(
                             contentDescription = "戻る"
                         )
                     }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                }
             )
         }
     ) { paddingValues ->
@@ -95,7 +87,6 @@ fun ChallengeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             Text(
                 text = "お題",
                 style = MaterialTheme.typography.headlineSmall,
@@ -103,9 +94,7 @@ fun ChallengeScreen(
             )
 
             when {
-                loading -> {
-                    Text("読み込み中…")
-                }
+                loading -> Text("読み込み中…")
                 error != null -> {
                     Text(
                         text = "エラー: $error",
@@ -114,9 +103,24 @@ fun ChallengeScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(12.dp))
-                    Button(onClick = { reload() }) {
-                        Text("再読み込み")
-                    }
+                    Button(
+                        enabled = !submitting,
+                        onClick = {
+                            scope.launch {
+                                runCatching {
+                                    loading = true
+                                    error = null
+                                    ApiClient.api.getRandomPrompt()
+                                }.onSuccess { dto ->
+                                    promptId = dto.id
+                                    currentChallenge = dto.content
+                                }.onFailure { e ->
+                                    error = e.message ?: "ネットワークエラー"
+                                }
+                                loading = false
+                            }
+                        }
+                    ) { Text("再読み込み") }
                 }
                 else -> {
                     Text(
@@ -136,14 +140,23 @@ fun ChallengeScreen(
 
                     Spacer(modifier = Modifier.weight(0.2f))
 
-                    // スコア選択 -> お題IDとセットで上位へ返す
+                    // ★ スコア選択 → POST /scores → 4引数で上位へ返す
                     InputScoringPopup(
                         onScoreSelected = { score ->
-                            val id = promptId
-                            if (id != null) {
-                                onCompleted(id, score)
-                            } else {
-                                // 取得前に押されたなどの保険（必要ならスナックバー等を表示）
+                            val id = promptId ?: return@InputScoringPopup
+                            if (submitting) return@InputScoringPopup
+                            submitting = true
+                            scope.launch {
+                                try {
+                                    val resp = ApiClient.api.postScore(ScorePostBody(id, score))
+                                    val avgF: Float? = resp.stats.avg?.toFloat()
+                                    val count = resp.stats.count
+                                    onCompleted(id, score, avgF, count) // ★ ここを4引数で
+                                } catch (e: Exception) {
+                                    // TODO: スナックバー等で通知
+                                } finally {
+                                    submitting = false
+                                }
                             }
                         }
                     )
@@ -158,7 +171,7 @@ fun ChallengeScreen(
 fun ChallengeScreenPreview() {
     MaterialTheme {
         ChallengeScreen(
-            onCompleted = { _, _ -> },
+            onCompleted = { _, _, _, _ -> },
             onBack = {}
         )
     }
