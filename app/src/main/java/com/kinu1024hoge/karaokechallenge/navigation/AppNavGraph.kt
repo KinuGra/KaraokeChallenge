@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.kinu1024hoge.karaokechallenge.feature.challenge.ChallengeScreen
 import com.kinu1024hoge.karaokechallenge.feature.home.HomeScreen
 
 @Composable
@@ -13,7 +14,13 @@ fun AppNavGraph() {
 
     NavHost(navController = nav, startDestination = Destinations.HOME) {
         composable(Destinations.HOME) {
-            HomeScreen()
+            HomeScreen(onStart = { nav.navigate(Destinations.CHALLENGE) })
+        }
+        composable(Destinations.CHALLENGE) {
+            ChallengeScreen(
+                onCompleted = {},
+                onBack = { nav.popBackStack() }
+            )
         }
     }
 }
