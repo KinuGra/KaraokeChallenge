@@ -20,9 +20,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// スクリーン全体のエントリーポイントとなるComposable
+@Composable
+fun HomeScreen(
+    onStart: () -> Unit
+    // 必要であればViewModelやナビゲーションコントローラーなどを引数に取る
+) {
+    // ここでViewModelの準備や状態管理などを行う
+    // 例: val viewModel: HomeViewModel = hiltViewModel()
+    // 例: val navController = rememberNavController()
+
+    KaraokeChallengeContent(onStart)
+}
+
 // UIの実際のコンテンツ部分
 @Composable
-fun KaraokeChallengeContent(onStartClick: () -> Unit) {
+fun KaraokeChallengeContent(onStart: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +79,7 @@ fun KaraokeChallengeContent(onStartClick: () -> Unit) {
 
         // ボタンセクション
         Button(
-            onClick = onStartClick,
+            onClick = onStart,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp, vertical = 24.dp)
@@ -86,24 +99,6 @@ fun KaraokeChallengeContent(onStartClick: () -> Unit) {
     }
 }
 
-// スクリーン全体のエントリーポイントとなるComposable
-@Composable
-fun HomeScreen(
-    // 必要であればViewModelやナビゲーションコントローラーなどを引数に取る
-) {
-    // ここでViewModelの準備や状態管理などを行う
-    // 例: val viewModel: HomeViewModel = hiltViewModel()
-    // 例: val navController = rememberNavController()
-
-    KaraokeChallengeContent(
-        onStartClick = {
-            // "チャレンジを始める！"ボタンがクリックされたときの実際の処理
-            // 例: navController.navigate("challenge_screen")
-            println("スタートボタンがクリックされました！")
-        }
-    )
-}
-
 // @Preview 関数はトップレベルに配置する
 @Preview(showBackground = true)
 @Composable
@@ -111,6 +106,6 @@ fun HomeScreenPreview() {
     MaterialTheme {
         // プレビュー用に、実際のロジックを持たないKaraokeChallengeContentを直接呼び出すか、
         // HomeScreenを呼び出す（ただし、HomeScreenが複雑な依存関係を持たない場合）
-        KaraokeChallengeContent(onStartClick = {})
+        KaraokeChallengeContent(onStart = {})
     }
 }
