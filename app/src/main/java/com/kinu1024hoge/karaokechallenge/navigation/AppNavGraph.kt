@@ -15,32 +15,38 @@ import com.kinu1024hoge.karaokechallenge.feature.test.TestPing
 
 @Composable
 fun AppNavGraph() {
-    // どの画面を表示しているか、どの画面に遷移するかを管理
     val nav = rememberNavController()
 
     NavHost(navController = nav, startDestination = Destinations.HOME) {
-        composable(Destinations.TESTPING) {
-            // node.jsにテスト接続するための画面
-            TestPing()
-        }
+
+        composable(Destinations.TESTPING) { TestPing() }
+
         composable(Destinations.HOME) {
             HomeScreen(onStart = { nav.navigate(Destinations.CHALLENGE) })
         }
+
         composable(Destinations.CHALLENGE) {
             ChallengeScreen(
-                onCompleted = { score -> nav.navigate(Destinations.result(score))},
+                onCompleted = { promptId, score ->
+                    nav.navigate(Destinations.result(promptId, score))
+                },
                 onBack = { nav.popBackStack() }
             )
         }
+
         composable(
             route = Destinations.RESULT,
             arguments = listOf(
-                navArgument("score") { type = NavType.IntType; defaultValue = 0 },
+                navArgument("promptId") { type = NavType.IntType },
+                navArgument("score")    { type = NavType.IntType; defaultValue = 0 },
             )
         ) { backStackEntry ->
-            val score = backStackEntry.arguments?.getInt("score") ?: 0
+            val promptId = backStackEntry.arguments?.getInt("promptId") ?: 0
+            val score    = backStackEntry.arguments?.getInt("score") ?: 0
+
             ResultScreen(
-                score = score,
+                promptId = promptId,
+                score    = score,
                 onBackHome = {
                     nav.popBackStack(Destinations.HOME, inclusive = false)
                 }
