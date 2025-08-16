@@ -59,22 +59,28 @@ fun InputScoringPopup(
                         verticalArrangement = Arrangement.spacedBy(8.dp) // ボタン間にスペース
                     ) {
                         Button(onClick = {
+                            onScoreSelected(90)
+                            showPopup.value = false
+                        }) {
+                            Text("お題達成！（90点くらい）")
+                        }
+                        Button(onClick = {
                             onScoreSelected(70)
                             showPopup.value = false
                         }) {
-                            Text("80～100点くらい")
+                            Text("ほぼ達成！（70点くらい）")
                         }
                         Button(onClick = {
                             onScoreSelected(50)
                             showPopup.value = false
                         }) {
-                            Text("50～79点くらい")
+                            Text("半分達成！（50点くらい）")
                         }
                         Button(onClick = {
-                            onScoreSelected(30)
+                            onScoreSelected(10)
                             showPopup.value = false
                         }) {
-                            Text("0～49点くらい")
+                            Text("全然ダメ！（10点くらい）")
                         }
                     }
                 }
