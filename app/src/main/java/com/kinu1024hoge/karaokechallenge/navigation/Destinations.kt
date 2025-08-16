@@ -4,4 +4,5 @@ object Destinations {
     const val HOME = "home"
     const val CHALLENGE = "challenge"
     const val RESULT = "result"
+    const val TESTPING = "testPing"
 }
