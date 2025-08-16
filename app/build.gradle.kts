@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,6 +10,10 @@ android {
     namespace = "com.kinu1024hoge.karaokechallenge"
     compileSdk = 36
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.kinu1024hoge.karaokechallenge"
         minSdk = 31
@@ -16,6 +22,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val props = Properties().apply() {
+            val f = rootProject.file("local.properties")
+            if (f.exists()) f.inputStream().use { load(it) }
+        }
+        val url = props.getProperty("API_BASE_URL") ?: "http://10.0.2.2:3000/"
+        buildConfigField("String", "BASE_URL", "\"$url\"")
     }
 
     buildTypes {
