@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kinu1024hoge.karaokechallenge.feature.home.ui.HomeScreenStyles
+import com.kinu1024hoge.karaokechallenge.ui.theme.KaraokeChallengeTheme
 
 @Composable
 fun HomeScreen(onStart: () -> Unit) {
@@ -117,7 +118,7 @@ fun KaraokeChallengeContent(onStart: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    MaterialTheme(colorScheme = lightColorScheme()) {
+    KaraokeChallengeTheme {
         KaraokeChallengeContent(onStart = {})
     }
 }
