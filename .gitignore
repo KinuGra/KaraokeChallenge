@@ -1,0 +1,55 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# === Gradle ===
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# === Android Studio / IntelliJ ===
+.idea/
+*.ipr
+*.iws
+out/
+
+# === Log / Temp / Misc ===
+*.log
+*.tmp
+*.swp
+*.lock
+*.DS_Store
+
+# === Keystore / Signing files (手元だけに置く) ===
+*.jks
+*.keystore
+*.pem
+*.p12
+
+# === OS generated ===
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# === Cache ===
+.cxx/
+.externalNativeBuild/
+
+# === Misc Android ===
+captures/
+outputs/
+navigation.json
+google-services.json   # Firebaseを使う場合、公開リポジトリには含めない
