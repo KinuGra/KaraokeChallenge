@@ -15,6 +15,7 @@ fun AppNavGraph() {
 
     NavHost(navController = nav, startDestination = Destinations.HOME) {
         composable(Destinations.TESTPING) {
+            // node.jsにテスト接続するための画面
             TestPing()
         }
         composable(Destinations.HOME) {

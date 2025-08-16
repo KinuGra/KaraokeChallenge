@@ -26,9 +26,7 @@ import androidx.compose.ui.window.DialogProperties
 @Composable
 fun InputScoringPopup(
     showPopup: MutableState<Boolean>,
-    on70PointsClick: () -> Unit,
-    on80PointsClick: () -> Unit,
-    on90PointsClick: () -> Unit,
+    onScoreSelected: (Int) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     if (showPopup.value) {
@@ -47,30 +45,44 @@ fun InputScoringPopup(
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(16.dp),
+                    modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "採点結果を選択してください",
+                        text = "お題達成度を選択してください",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp) // ボタン間にスペース
                     ) {
-                        Button(onClick = on70PointsClick) { Text("70点") }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(onClick = on80PointsClick) { Text("80点") }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(onClick = on90PointsClick) { Text("90点") }
+                        Button(onClick = {
+                            onScoreSelected(70)
+                            showPopup.value = false
+                        }) {
+                            Text("80～100点くらい")
+                        }
+                        Button(onClick = {
+                            onScoreSelected(50)
+                            showPopup.value = false
+                        }) {
+                            Text("50～79点くらい")
+                        }
+                        Button(onClick = {
+                            onScoreSelected(30)
+                            showPopup.value = false
+                        }) {
+                            Text("0～49点くらい")
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 @Preview(showBackground = true, name = "InputScoringPopup Dialog Preview")
 @Composable
@@ -79,9 +91,7 @@ fun InputScoringPopupDialogPreview() {
         val show = remember { mutableStateOf(true) }
         InputScoringPopup(
             showPopup = show,
-            on70PointsClick = { println("Preview: 70 points") },
-            on80PointsClick = { println("Preview: 80 points") },
-            on90PointsClick = { println("Preview: 90 points") },
+            onScoreSelected = {},
             // ポップアップ外側をクリックしたとき
             onDismissRequest = { show.value = false }
         )
@@ -99,30 +109,15 @@ fun InputScoringPopup(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = { showPopupState.value = true }
-        ) {
-            Text("採点入力をする")
+        Button(onClick = { showPopupState.value = true }) {
+            Text("お題達成度入力")
         }
     }
 
     InputScoringPopup(
         showPopup = showPopupState,
-        on70PointsClick = {
-            onScoreSelected(70)
-            showPopupState.value = false
-        },
-        on80PointsClick = {
-            onScoreSelected(80)
-            showPopupState.value = false
-        },
-        on90PointsClick = {
-            onScoreSelected(90)
-            showPopupState.value = false
-        },
-        onDismissRequest = {
-            showPopupState.value = false
-        }
+        onScoreSelected = onScoreSelected,
+        onDismissRequest = { showPopupState.value = false }
     )
 }
 

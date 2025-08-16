@@ -82,8 +82,14 @@ fun ChallengeScreen(
                     .padding(16.dp)
                     .weight(1f) // お題表示エリアがスペースを占めるように
             )
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "周りの人が入力しよう")
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(text = "歌う人はお題に取り組もう")
+            Text(text = "他のみんなは歌う人のお題の取り組みを評価")
+
+            Spacer(modifier = Modifier.weight(0.2f))
+
             InputScoringPopup( // Call the self-contained component
                 onScoreSelected = { score ->
                     onCompleted() // Call onCompleted when a score is selected
