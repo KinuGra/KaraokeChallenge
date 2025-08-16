@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kinu1024hoge.karaokechallenge.feature.challenge.ChallengeScreen
 import com.kinu1024hoge.karaokechallenge.feature.home.HomeScreen
+import com.kinu1024hoge.karaokechallenge.feature.test.TestPing
 
 @Composable
 fun AppNavGraph() {
@@ -13,6 +14,9 @@ fun AppNavGraph() {
     val nav = rememberNavController()
 
     NavHost(navController = nav, startDestination = Destinations.HOME) {
+        composable(Destinations.TESTPING) {
+            TestPing()
+        }
         composable(Destinations.HOME) {
             HomeScreen(onStart = { nav.navigate(Destinations.CHALLENGE) })
         }
