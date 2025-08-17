@@ -52,7 +52,8 @@ fun ResultScreen(
         )
 
         Text(
-            text = "あなたのスコア: $score 点",
+            text = """あなたのスコア 
+                |$score 点""".trimMargin(),
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 16.dp),
             textAlign = TextAlign.Center
