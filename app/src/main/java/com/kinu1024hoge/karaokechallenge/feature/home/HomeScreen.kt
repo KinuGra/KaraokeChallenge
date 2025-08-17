@@ -3,7 +3,6 @@ package com.kinu1024hoge.karaokechallenge.feature.home
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.with
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kinu1024hoge.karaokechallenge.feature.home.ui.HomeScreenStyles
 import com.kinu1024hoge.karaokechallenge.ui.theme.KaraokeChallengeTheme
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -86,12 +86,16 @@ fun KaraokeChallengeContent(onStart: () -> Unit) {
         }
 
         // トグルボタン
-        OutlinedButton(
+        Button(
             onClick = { showDescription = !showDescription },
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(0.6f),
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = Color(0xFFf8b500),
+                contentColor = Color.White
+            )
         ) {
             Text(
                 text = if (showDescription) "説明を閉じる" else "説明を見る",
@@ -107,8 +111,8 @@ fun KaraokeChallengeContent(onStart: () -> Unit) {
                 .padding(horizontal = 32.dp, vertical = 24.dp)
                 .height(60.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = Color(0xFFf8b500),
+                contentColor = Color.White
             ),
             shape = MaterialTheme.shapes.large,
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)

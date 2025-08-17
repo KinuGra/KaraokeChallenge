@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -58,31 +60,55 @@ fun InputScoringPopup(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp) // ボタン間にスペース
                     ) {
-                        Button(onClick = {
-                            onScoreSelected(90)
-                            showPopup.value = false
-                        }) {
-                            Text("お題達成！（90点くらい）")
+                        Button(
+                            onClick = {
+                                onScoreSelected(90)
+                                showPopup.value = false
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFFA500) // オレンジ色
+                            )
+                        ) {
+                            Text("お題達成！（90点くらい）", color = Color.White)
                         }
-                        Button(onClick = {
-                            onScoreSelected(70)
-                            showPopup.value = false
-                        }) {
-                            Text("ほぼ達成！（70点くらい）")
+
+                        Button(
+                            onClick = {
+                                onScoreSelected(70)
+                                showPopup.value = false
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFFA500) // オレンジ色
+                            )
+                        ) {
+                            Text("ほぼ達成！（70点くらい）", color = Color.White)
                         }
-                        Button(onClick = {
-                            onScoreSelected(50)
-                            showPopup.value = false
-                        }) {
-                            Text("半分達成！（50点くらい）")
+
+                        Button(
+                            onClick = {
+                                onScoreSelected(50)
+                                showPopup.value = false
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFFA500) // オレンジ色
+                            )
+                        ) {
+                            Text("半分達成！（50点くらい）", color = Color.White)
                         }
-                        Button(onClick = {
-                            onScoreSelected(10)
-                            showPopup.value = false
-                        }) {
-                            Text("全然ダメ！（10点くらい）")
+
+                        Button(
+                            onClick = {
+                                onScoreSelected(10)
+                                showPopup.value = false
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFFA500) // オレンジ色
+                            )
+                        ) {
+                            Text("全然ダメ！（10点くらい）", color = Color.White)
                         }
                     }
+
                 }
             }
         }
@@ -115,10 +141,16 @@ fun InputScoringPopup(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(onClick = { showPopupState.value = true }) {
+        Button(
+            onClick = { showPopupState.value = true },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFA500) // オレンジ色
+            )
+        ) {
             Text("お題達成度入力")
         }
     }
+
 
     InputScoringPopup(
         showPopup = showPopupState,

@@ -17,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,10 +36,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChallengeScreen(
-    onCompleted: (promptId: Int, score: Int, avg: Float?, count: Int) -> Unit, // ★ 4引数
+    onCompleted: (promptId: Int, score: Int, avg: Float?, count: Int) -> Unit,
     onBack: () -> Unit
 ) {
-    // 状態
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     var submitting by remember { mutableStateOf(false) }
@@ -49,12 +47,11 @@ fun ChallengeScreen(
 
     val scope = rememberCoroutineScope()
 
-    // 初回ロード（ランダムお題）
     LaunchedEffect(Unit) {
         runCatching {
             loading = true
             error = null
-            ApiClient.api.getRandomPrompt() // ← あなたの ApiService に合わせて
+            ApiClient.api.getRandomPrompt()
         }.onSuccess { dto ->
             promptId = dto.id
             currentChallenge = dto.content
@@ -140,7 +137,6 @@ fun ChallengeScreen(
 
                     Spacer(modifier = Modifier.weight(0.2f))
 
-                    // ★ スコア選択 → POST /scores → 4引数で上位へ返す
                     InputScoringPopup(
                         onScoreSelected = { score ->
                             val id = promptId ?: return@InputScoringPopup
@@ -151,7 +147,7 @@ fun ChallengeScreen(
                                     val resp = ApiClient.api.postScore(ScorePostBody(id, score))
                                     val avgF: Float? = resp.stats.avg?.toFloat()
                                     val count = resp.stats.count
-                                    onCompleted(id, score, avgF, count) // ★ ここを4引数で
+                                    onCompleted(id, score, avgF, count)
                                 } catch (e: Exception) {
                                     // TODO: スナックバー等で通知
                                 } finally {
@@ -176,3 +172,4 @@ fun ChallengeScreenPreview() {
         )
     }
 }
+

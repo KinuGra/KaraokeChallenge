@@ -1,20 +1,24 @@
 package com.kinu1024hoge.karaokechallenge.feature.result
 
-import android.R.attr.onClick
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.kinu1024hoge.karaokechallenge.ui.theme.ResultStart
+import com.kinu1024hoge.karaokechallenge.ui.theme.ResultEnd
+import com.kinu1024hoge.karaokechallenge.ui.theme.KaraokeChallengeTheme
 
 @Composable
 fun ResultScreen(
@@ -24,62 +28,109 @@ fun ResultScreen(
     count: Int,    // 集計件数（n）
     onBackHome: () -> Unit
 ) {
+    // スコアのアニメーション表示
+    val animatedScore by animateIntAsState(
+        targetValue = score,
+        animationSpec = tween(durationMillis = 800)
+    )
+
     val message = when {
         score >= 90 -> "すごい！完璧に近い達成度！"
         score >= 70 -> "よくできました！あと少し！"
         score >= 50 -> "まあまあ！次はもっとがんばろう！"
         else -> "挑戦したことに意味がある！次回に期待！"
     }
+
     val avgText = avg?.let { String.format("%.1f", it) } ?: "--"
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(ResultStart, ResultEnd)
+                )
+            )
+            .padding(24.dp)
     ) {
-        Text(
-            text = "結果発表",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        Text(
-            text = "お題ID: $promptId",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        Text(
-            text = """あなたのスコア 
-                |$score 点""".trimMargin(),
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 16.dp),
-            textAlign = TextAlign.Center
-        )
-
-        // ★ 全国平均の表示（データが無い場合は "--"、件数は n=0）
-        Text(
-            text = "全国平均: $avgText 点（n=$count）",
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = "結果発表",
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
+                textAlign = TextAlign.Center
+            )
 
-        Text(
-            text = message,
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 32.dp)
-        )
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xCCFFFFFF)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally, // 中央揃え
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "お題ID: $promptId",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
+                    )
 
-        Button(onClick = onBackHome) {
-            Text("タイトルに戻る")
+                    Text(
+                        text = "$animatedScore 点",
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 48.sp,
+                            color = Color(0xFFf57c00)
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = "全国平均: $avgText 点（n=$count）",
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = onBackHome,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFf57c00),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(
+                    text = "タイトルに戻る",
+                    color = Color.White, // 文字色を白に
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                )
+
+            }
         }
     }
 }
@@ -87,7 +138,7 @@ fun ResultScreen(
 @Preview(showBackground = true)
 @Composable
 fun ResultScreenPreview() {
-    MaterialTheme {
+    KaraokeChallengeTheme {
         ResultScreen(
             promptId = 1,
             score = 85,
