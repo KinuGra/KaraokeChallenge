@@ -81,11 +81,11 @@ fun ResultScreen(
                     horizontalAlignment = Alignment.CenterHorizontally, // 中央揃え
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "お題ID: $promptId",
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
+//                    Text(
+//                        text = "お題ID: $promptId",
+//                        style = MaterialTheme.typography.bodyLarge,
+//                        textAlign = TextAlign.Center
+//                    )
 
                     Text(
                         text = "$animatedScore 点",
